@@ -10,7 +10,7 @@ It uses your own Telegram account, like Telegram Desktop does: no bot, nothing a
 
 | Platform | Status |
 |---|---|
-| macOS (Apple Silicon) | Automated tests pass; checks with a real account pending. |
+| macOS (Apple Silicon) | **Tested** with a real account: setup from Pi (API credentials, QR login), reading chats and history from before the login, paging, search, approved text, file and voice messages to Saved Messages, a declined send, voice message download, crash restart, stop, network loss and recovery, a session ended from another device and the new login, running next to whatsapp-mcp. Not yet checked: phone-number login, autostart after a reboot, uninstall. |
 | Linux | Developed for it, not tested yet. |
 | Windows | **Experimental.** Developed for it, not tested yet. |
 
