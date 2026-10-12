@@ -1,4 +1,29 @@
 {
-  "version": null,
-  "assets": {}
+  "version": "0.1.0",
+  "assets": {
+    "darwin-amd64": {
+      "file": "tg-mcp-darwin-amd64",
+      "sha256": "d6af155f458ba473ce90852c31e800907fe3437d8fc526dc59756c4c5a31aca9"
+    },
+    "darwin-arm64": {
+      "file": "tg-mcp-darwin-arm64",
+      "sha256": "a837c88b5e4e3eb90bd99e010606e013d6cb46fdd86847cdc314564ac23c48a0"
+    },
+    "linux-amd64": {
+      "file": "tg-mcp-linux-amd64",
+      "sha256": "9b0e805e06337be0f137a4f047040435c07c79a4b4473e4122ed94ef3d7ec8de"
+    },
+    "linux-arm64": {
+      "file": "tg-mcp-linux-arm64",
+      "sha256": "641f9e79c25587d46ffab3a30ee0944f2eb7452ffc1d762738cfb6a73335d8f2"
+    },
+    "windows-amd64": {
+      "file": "tg-mcp-windows-amd64.exe",
+      "sha256": "a7cf6ca9e381f3bdd59e238e2572575d023058983846c10522e050b6d2258026"
+    },
+    "windows-arm64": {
+      "file": "tg-mcp-windows-arm64.exe",
+      "sha256": "facf1fbc92829af5b53d5845c97dcc3ee847db0169decda34fb563492c2bde43"
+    }
+  }
 }
