@@ -1,10 +1,18 @@
 # pi-tg
 
+*Unofficial Telegram integration for Pi.*
+
 Read and search your Telegram chats from [Pi](https://pi.dev), and send messages only after you approve each one inside Pi's terminal.
 
 It uses your own Telegram account, like Telegram Desktop does: no bot, nothing added to your groups.
 
-> This is an unofficial Telegram integration, not affiliated with Telegram. Using the Telegram API is subject to [Telegram's API Terms of Service](https://core.telegram.org/api/terms); read them before using it, including the section on using data with AI technologies.
+> This is an unofficial Telegram integration, not affiliated with Telegram.
+
+## Before you use it: Telegram's API terms
+
+You create your own Telegram API credentials during setup and, with them, accept [Telegram's API Terms of Service](https://core.telegram.org/api/terms). Read them, in particular **§1.5**: data from Telegram may not be used to train, fine-tune or otherwise develop, enhance or deploy artificial intelligence technologies. pi-tg never trains or improves any model, but the messages you ask Pi about are sent to your AI model provider. Whether that is acceptable under §1.5 is your judgment, and your responsibility as the owner of the credentials: Telegram can withdraw API access from credentials it considers in breach. `/telegram-setup` shows this notice and asks you to confirm before anything is set up.
+
+As Telegram's terms require, reading the latest messages of a chat marks it read, like opening it in a Telegram app, and channel posts come with the channel's sponsored message, labeled as such.
 
 ## Platform support
 
@@ -44,7 +52,7 @@ Everything happens inside Pi; no second terminal is needed. Plan about five minu
 
 3. **The bridge.** Choose *Download and install tg-mcp*: Pi downloads it and checks it against the checksum pinned in this package. If you built it yourself, run `/telegram-setup /path/to/tg-mcp` instead.
 
-4. **Your API credentials.** Telegram requires every program that logs in to an account to have its own credentials. Pi explains how to create yours:
+4. **Telegram's API terms and your API credentials.** Pi first shows the notice above and asks you to confirm. Telegram requires every program that logs in to an account to have its own credentials. Pi explains how to create yours:
    - open [my.telegram.org](https://my.telegram.org) in a browser and enter your phone number with the country code; the login code arrives in your Telegram app, not by SMS;
    - click **API development tools**;
    - fill in App title `tg-mcp`, Short name `tgmcp`, Platform `Desktop`, and click **Create application**;

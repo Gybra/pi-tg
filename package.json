@@ -1,7 +1,7 @@
 {
   "name": "@gybra/pi-tg",
   "version": "0.1.0",
-  "description": "Telegram integration for Pi Coding Agent with guided setup and in-terminal, per-message approval",
+  "description": "Unofficial Telegram integration for Pi Coding Agent, with guided setup and in-terminal, per-message approval",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Gybra/pi-tg.git"

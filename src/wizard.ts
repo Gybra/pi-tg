@@ -2,6 +2,12 @@ import type { ExtensionContext } from "@earendil-works/pi-coding-agent";
 
 // The beginner's path to Telegram API credentials, which every user creates for themselves.
 
+export const TERMS_NOTICE = `This is an unofficial Telegram client. To use it you create your own Telegram API credentials, and with them you accept Telegram's API Terms of Service: https://core.telegram.org/api/terms
+
+Please note in particular §1.5: data from Telegram may not be used to train, fine-tune or otherwise develop, enhance or deploy artificial intelligence technologies. This tool never trains or improves a model, but the messages you ask Pi about are sent to your AI model provider. Whether that is acceptable under §1.5 is your judgment and your responsibility as the owner of the credentials: Telegram can withdraw API access from credentials it considers in breach.
+
+Continue?`;
+
 export const CREDENTIALS_GUIDE = `Telegram asks every program that logs in to an account to have its own API credentials. You create them once, for free, in about two minutes:
 
 1. Open https://my.telegram.org in your browser and enter your phone number with the country code. The login code arrives in your Telegram app, not by SMS.
@@ -40,6 +46,7 @@ async function ask<T>(ctx: ExtensionContext, title: string, placeholder: string,
 
 /** Explains how to create API credentials, then asks for them until they look right. */
 export async function askCredentials(ctx: ExtensionContext): Promise<{ api_id: number; api_hash: string } | undefined> {
+  if (!(await ctx.ui.confirm("Before you start: Telegram's API terms", TERMS_NOTICE))) return undefined;
   if (!(await ctx.ui.confirm("Create your Telegram API credentials", CREDENTIALS_GUIDE))) return undefined;
   const api_id = await ask(ctx, "Paste the App api_id (a number)", "12345678", parseApiID,
     "That is not an api_id: copy the number shown next to \"App api_id\" on my.telegram.org.");

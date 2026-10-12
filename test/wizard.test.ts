@@ -1,11 +1,20 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { askCredentials, CREDENTIALS_GUIDE, parseApiHash, parseApiID } from "../src/wizard.ts";
+import { askCredentials, CREDENTIALS_GUIDE, parseApiHash, parseApiID, TERMS_NOTICE } from "../src/wizard.ts";
 
 test("the guide walks a beginner through my.telegram.org", () => {
   for (const step of ["https://my.telegram.org", "Telegram app", "API development tools", "App title", "Short name", "Desktop", "Create application", "api_id", "api_hash", "private"]) {
     assert.ok(CREDENTIALS_GUIDE.includes(step), step);
   }
+});
+
+test("the terms notice explains the AI clause and who is responsible, before anything is set up", async () => {
+  for (const point of ["unofficial", "§1.5", "artificial intelligence", "model provider", "your responsibility", "https://core.telegram.org/api/terms"]) {
+    assert.ok(TERMS_NOTICE.includes(point), point);
+  }
+  const { ctx, prompts } = fakeCtx(true, ["12345", "0123456789abcdef0123456789abcdef"]);
+  await askCredentials(ctx);
+  assert.equal(prompts[0], TERMS_NOTICE, "the terms come first");
 });
 
 test("accepts api_id and api_hash as copied from the page, and nothing else", () => {

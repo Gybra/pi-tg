@@ -182,14 +182,14 @@ test("/telegram-setup guides a new user through credentials, login and autostart
   setup(pi as never, d.deps);
   const settings = join(d.deps.agentDir, "settings.json");
   writeFileSync(settings, '{"packages":[]}');
-  const { ctx, notes, asked } = uiCtx({ confirm: [true, true, true], inputs: CREDENTIALS, select: ["Scan a QR code", "Start automatically"] });
+  const { ctx, notes, asked } = uiCtx({ confirm: [true, true, true, true], inputs: CREDENTIALS, select: ["Scan a QR code", "Start automatically"] });
   await command("telegram-setup", bridge.path, ctx);
   assert.deepEqual(bridge.state(), {
     running: true, configured: true, loggedIn: true, autostart: true, approver: "",
     credentials: '{"api_id":12345,"api_hash":"0123456789abcdef0123456789abcdef"}',
   });
   assert.deepEqual(changes(bridge), ["set-app", "login --json --method qr", "autostart enable"], "credentials travel on stdin, never in arguments");
-  assert.ok(asked.some((q) => /API credentials/.test(q)) && asked.some((q) => /Log this computer in/.test(q)));
+  assert.ok(asked.some((q) => /API terms/.test(q)) && asked.some((q) => /API credentials/.test(q)) && asked.some((q) => /Log this computer in/.test(q)));
   assert.deepEqual(registered, [{ name: "telegram", config: { command: bridge.path, args: ["mcp"], timeout: 180, exposure: "codemode" } }]);
   assert.deepEqual(JSON.parse(readFileSync(configFile(d), "utf8")), { bridgePath: bridge.path });
   assert.equal(readFileSync(settings, "utf8"), '{"packages":[]}', "Pi settings are not modified");
@@ -216,8 +216,9 @@ test("/telegram-setup changes nothing when the user declines or the path is unus
   const bridge = statefulBridge();
   for (const [args, answers] of [
     [bridge.path, { confirm: [false] }],
-    [bridge.path, { confirm: [true, false] }], // accepts the bridge, declines the credentials guide
-    [bridge.path, { confirm: [true, true], inputs: ["12345", undefined] }], // cancels at the api_hash
+    [bridge.path, { confirm: [true, false] }], // accepts the bridge, declines Telegram's API terms
+    [bridge.path, { confirm: [true, true, false] }], // accepts the terms, declines the credentials guide
+    [bridge.path, { confirm: [true, true, true], inputs: ["12345", undefined] }], // cancels at the api_hash
     ["relative/tg-mcp", { confirm: [true] }],
     ["", { select: ["Use an existing"], inputs: [undefined] }],
   ] as const) {
