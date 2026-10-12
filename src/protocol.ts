@@ -1,8 +1,8 @@
 import { createHash } from "node:crypto";
 
-// Wire format of the bridge's approval protocol v1 (telegram-mcp docs/approval-protocol-v1.md).
+// Wire format of the bridge's approval protocol v1 (tg-mcp docs/approval-protocol-v1.md).
 // Drafts are parsed from the exact bytes the bridge will send, never rebuilt locally.
-export const APPROVAL_DOMAIN = "telegram-mcp/approval/v1";
+export const APPROVAL_DOMAIN = "tg-mcp/approval/v1";
 const MAX_MESSAGE_CHARS = 4096; // Telegram's limit, in Unicode code points
 const MAX_MEDIA_BYTES = 50 * 1024 * 1024;
 const MAX_PAYLOAD_BYTES = 256 * 1024; // message plus worst-case JSON escaping

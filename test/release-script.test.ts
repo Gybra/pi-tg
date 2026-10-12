@@ -13,27 +13,27 @@ const script = fileURLToPath(new URL("../scripts/update-bridge-release.mjs", imp
 const hash = (c: string) => c.repeat(64);
 
 test("writes the pinned checksums from a bridge release's SHA256SUMS", async () => {
-  const dir = mkdtempSync(join(tmpdir(), "pi-telegram-release-"));
+  const dir = mkdtempSync(join(tmpdir(), "pi-tg-release-"));
   const sums = join(dir, "SHA256SUMS");
   writeFileSync(sums, [
-    `${hash("a")}  telegram-mcp-darwin-arm64`,
-    `${hash("b")}  telegram-mcp-linux-amd64`,
-    `${hash("c")}  telegram-mcp-windows-amd64.exe`,
+    `${hash("a")}  tg-mcp-darwin-arm64`,
+    `${hash("b")}  tg-mcp-linux-amd64`,
+    `${hash("c")}  tg-mcp-windows-amd64.exe`,
     "",
   ].join("\n"));
   const out = join(dir, "bridge-release.json");
   await run(process.execPath, [script, "1.4.0", sums, out]);
   const release = JSON.parse(readFileSync(out, "utf8")) as BridgeRelease;
   assert.equal(release.version, "1.4.0");
-  assert.deepEqual(assetFor(release, "darwin", "arm64"), { file: "telegram-mcp-darwin-arm64", sha256: hash("a") });
-  assert.deepEqual(assetFor(release, "win32", "x64"), { file: "telegram-mcp-windows-amd64.exe", sha256: hash("c") });
+  assert.deepEqual(assetFor(release, "darwin", "arm64"), { file: "tg-mcp-darwin-arm64", sha256: hash("a") });
+  assert.deepEqual(assetFor(release, "win32", "x64"), { file: "tg-mcp-windows-amd64.exe", sha256: hash("c") });
   assert.equal(assetFor(release, "linux", "arm64"), undefined);
 });
 
 test("rejects a bad version or checksum file", async () => {
-  const dir = mkdtempSync(join(tmpdir(), "pi-telegram-release-"));
+  const dir = mkdtempSync(join(tmpdir(), "pi-tg-release-"));
   const sums = join(dir, "SHA256SUMS");
-  writeFileSync(sums, `${hash("a")}  telegram-mcp-darwin-arm64\n`);
+  writeFileSync(sums, `${hash("a")}  tg-mcp-darwin-arm64\n`);
   await assert.rejects(run(process.execPath, [script, "v1.4", sums, join(dir, "out.json")]));
   writeFileSync(sums, "not a checksum line\n");
   await assert.rejects(run(process.execPath, [script, "1.4.0", sums, join(dir, "out.json")]));

@@ -16,9 +16,9 @@ const posix = { skip: process.platform === "win32" };
 type Handler = (event: unknown, ctx: unknown) => unknown;
 type State = { running: boolean; configured: boolean; loggedIn: boolean; autostart: boolean; approver: string; credentials: string };
 
-/** A telegram-mcp stand-in that keeps its state in a file and logs every command (never stdin, which may hold secrets). */
+/** A tg-mcp stand-in that keeps its state in a file and logs every command (never stdin, which may hold secrets). */
 function statefulBridge(initial: Partial<State> = {}) {
-  const stateFile = join(mkdtempSync(join(tmpdir(), "pi-telegram-state-")), "state.json");
+  const stateFile = join(mkdtempSync(join(tmpdir(), "pi-tg-state-")), "state.json");
   writeFileSync(stateFile, JSON.stringify({ running: false, configured: false, loggedIn: false, autostart: false, approver: "", credentials: "", ...initial }));
   const path = fakeBridge(`
     const fs = require("fs");
@@ -39,7 +39,7 @@ function statefulBridge(initial: Partial<State> = {}) {
         process.stdin.on("end", () => { st.credentials = input.trim(); st.configured = true; save(); });
         return;
       case "login":
-        if (st.running) { console.error("Error: the bridge is running; stop it first with telegram-mcp stop"); process.exit(1); }
+        if (st.running) { console.error("Error: the bridge is running; stop it first with tg-mcp stop"); process.exit(1); }
         say({ event: "qr", modules: ["0000", "0110", "0110", "0000"], expires_in: 30 });
         st.loggedIn = true; save();
         say({ event: "logged_in", message: "Logged in to Telegram as Test User." });
@@ -107,7 +107,7 @@ function uiCtx(answers: { inputs?: (string | undefined)[]; confirm?: boolean[]; 
   const ctx = {
     mode,
     hasUI: mode !== "print" && mode !== "json",
-    cwd: mkdtempSync(join(tmpdir(), "pi-telegram-project-")),
+    cwd: mkdtempSync(join(tmpdir(), "pi-tg-project-")),
     ui: {
       input: async (title: string) => (asked.push(title), inputs.shift()),
       confirm: async (title: string) => (asked.push(title), confirms.shift() ?? false),
@@ -128,7 +128,7 @@ function uiCtx(answers: { inputs?: (string | undefined)[]; confirm?: boolean[]; 
 function deps(options: { client?: Partial<BridgeClient>; release?: BridgeRelease; fetchImpl?: typeof fetch } = {}) {
   const signers: SessionSigner[] = [];
   let revoked = 0;
-  const agentDir = mkdtempSync(join(tmpdir(), "pi-telegram-agent-"));
+  const agentDir = mkdtempSync(join(tmpdir(), "pi-tg-agent-"));
   const value: Deps = {
     agentDir,
     dataDir: () => join(agentDir, "bridge-data"),
@@ -158,7 +158,7 @@ function deps(options: { client?: Partial<BridgeClient>; release?: BridgeRelease
 }
 
 const CREDENTIALS = ["12345", "0123456789abcdef0123456789abcdef"];
-const configFile = (d: { deps: Deps }) => join(d.deps.agentDir, "pi-telegram.json");
+const configFile = (d: { deps: Deps }) => join(d.deps.agentDir, "pi-tg.json");
 const configure = (d: { deps: Deps }, bridgePath: string) => writeFileSync(configFile(d), JSON.stringify({ bridgePath }));
 const outgoing = () => ({ type: "tool_call", toolCallId: "1", toolName: "mcp__telegram__send_message", input: { recipient: "user:1000002", message: "hi", approval: { draft_id: "x", signature_b64: "y" } } });
 const start = { type: "session_start", reason: "startup" };
@@ -218,7 +218,7 @@ test("/telegram-setup changes nothing when the user declines or the path is unus
     [bridge.path, { confirm: [false] }],
     [bridge.path, { confirm: [true, false] }], // accepts the bridge, declines the credentials guide
     [bridge.path, { confirm: [true, true], inputs: ["12345", undefined] }], // cancels at the api_hash
-    ["relative/telegram-mcp", { confirm: [true] }],
+    ["relative/tg-mcp", { confirm: [true] }],
     ["", { select: ["Use an existing"], inputs: [undefined] }],
   ] as const) {
     const { pi, registered, command } = fakePi();
@@ -238,15 +238,15 @@ test("/telegram-setup downloads a verified bridge when a release is available", 
   const binary = readFileSync(bridge.path);
   const os = { darwin: "darwin", linux: "linux", win32: "windows" }[process.platform as "darwin"];
   const cpu = { arm64: "arm64", x64: "amd64" }[process.arch as "arm64"];
-  const release: BridgeRelease = { version: "9.9.9", assets: { [`${os}-${cpu}`]: { file: `telegram-mcp-${os}-${cpu}`, sha256: createHash("sha256").update(binary).digest("hex") } } };
+  const release: BridgeRelease = { version: "9.9.9", assets: { [`${os}-${cpu}`]: { file: `tg-mcp-${os}-${cpu}`, sha256: createHash("sha256").update(binary).digest("hex") } } };
   const urls: string[] = [];
   const fetchImpl = (async (url: string) => (urls.push(url), new Response(binary))) as unknown as typeof fetch;
   const { pi, registered, command } = fakePi();
   const d = deps({ release, fetchImpl });
   setup(pi as never, d.deps);
   await command("telegram-setup", "", uiCtx({ select: ["Download"], confirm: [] }).ctx);
-  const installed = join(d.deps.agentDir, "pi-telegram-bridge", "9.9.9", "telegram-mcp");
-  assert.deepEqual(urls, [`https://github.com/Gybra/telegram-mcp/releases/download/v9.9.9/telegram-mcp-${os}-${cpu}`]);
+  const installed = join(d.deps.agentDir, "pi-tg-bridge", "9.9.9", "tg-mcp");
+  assert.deepEqual(urls, [`https://github.com/Gybra/tg-mcp/releases/download/v9.9.9/tg-mcp-${os}-${cpu}`]);
   assert.deepEqual(registered, [{ name: "telegram", config: { command: installed, args: ["mcp"], timeout: 180, exposure: "codemode" } }]);
 });
 
@@ -341,8 +341,8 @@ test("blocks the model from the bridge's session, credentials and login, even be
   setup(pi as never, d.deps);
   for (const [tool, input] of [
     ["read", { path: join(d.deps.dataDir(), "session.json") }],
-    ["bash", { command: "echo KEY | telegram-mcp pair-pi" }],
-    ["bash", { command: "telegram-mcp login --json" }],
+    ["bash", { command: "echo KEY | tg-mcp pair-pi" }],
+    ["bash", { command: "tg-mcp login --json" }],
   ] as const) {
     assert.equal(((await emit("tool_call", { type: "tool_call", toolCallId: "1", toolName: tool, input })) as { block?: boolean })?.block, true, JSON.stringify(input));
   }
@@ -417,12 +417,12 @@ test("/telegram-uninstall removes a bridge the extension downloaded, never one t
   const bridge = statefulBridge({ running: true, configured: true, loggedIn: true });
   const { pi, command } = fakePi();
   const d = deps();
-  const installed = join(d.deps.agentDir, "pi-telegram-bridge", "1.0.0", "telegram-mcp");
-  mkdirSync(join(d.deps.agentDir, "pi-telegram-bridge", "1.0.0"), { recursive: true });
+  const installed = join(d.deps.agentDir, "pi-tg-bridge", "1.0.0", "tg-mcp");
+  mkdirSync(join(d.deps.agentDir, "pi-tg-bridge", "1.0.0"), { recursive: true });
   writeFileSync(installed, readFileSync(bridge.path), { mode: 0o755 });
   configure(d, installed);
   setup(pi as never, d.deps);
   await command("telegram-uninstall", "", uiCtx({ confirm: [true, false, false] }).ctx);
-  assert.equal(existsSync(join(d.deps.agentDir, "pi-telegram-bridge")), false);
+  assert.equal(existsSync(join(d.deps.agentDir, "pi-tg-bridge")), false);
   assert.equal(existsSync(bridge.path), true);
 });

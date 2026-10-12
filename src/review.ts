@@ -251,7 +251,7 @@ async function preparePreview(attachment: AttachmentView, bytes: Uint8Array): Pr
       // Not UTF-8: review it as a file instead.
     }
   }
-  const dir = await mkdtemp(join(tmpdir(), "pi-telegram-"));
+  const dir = await mkdtemp(join(tmpdir(), "pi-tg-"));
   const path = join(dir, safeFileName(attachment.name));
   await writeFile(path, bytes, { mode: 0o600, flag: "wx" });
   return { path, cleanup: () => rm(dir, { recursive: true, force: true }) };

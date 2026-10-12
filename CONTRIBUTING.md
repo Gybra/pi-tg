@@ -2,7 +2,7 @@
 
 Bug reports from every platform are welcome: none is yet tested end to end with a real account.
 
-Report problems with the issue form, giving your OS, architecture, Pi version, `pi-telegram` version and `telegram-mcp version`. Remove anything personal from logs. Security problems go through private reporting; see [SECURITY.md](SECURITY.md).
+Report problems with the issue form, giving your OS, architecture, Pi version, `pi-tg` version and `tg-mcp version`. Remove anything personal from logs. Security problems go through private reporting; see [SECURITY.md](SECURITY.md).
 
 ## Development
 
@@ -15,7 +15,7 @@ npm test
 npm pack --dry-run          # check that only the intended files are published
 ```
 
-Try a local checkout in Pi with `pi -e /path/to/pi-telegram`. The bridge repository has a dry-run mode for testing without a Telegram account; see its `docs/manual-verification.md`.
+Try a local checkout in Pi with `pi -e /path/to/pi-tg`. The bridge repository has a dry-run mode for testing without a Telegram account; see its `docs/manual-verification.md`.
 
 Ground rules:
 
@@ -29,6 +29,6 @@ Ground rules:
 
 ## Releasing
 
-1. Publish a telegram-mcp release, then pin its checksums: `node scripts/update-bridge-release.mjs <version> SHA256SUMS`.
+1. Publish a tg-mcp release, then pin its checksums: `node scripts/update-bridge-release.mjs <version> SHA256SUMS`.
 2. Run the checks above and inspect `npm pack --dry-run`.
 3. Publish with `npm publish`.

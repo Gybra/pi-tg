@@ -3,13 +3,13 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 /**
- * Writes an executable stand-in for telegram-mcp. `script` is the body of a Node
+ * Writes an executable stand-in for tg-mcp. `script` is the body of a Node
  * program receiving the command-line arguments as `args` and stdin as `input`.
  * POSIX only: Windows cannot execute a shebang script.
  */
 export function fakeBridge(script: string): string {
-  const dir = mkdtempSync(join(tmpdir(), "pi-telegram-fake bridge-"));
-  const path = join(dir, "telegram-mcp");
+  const dir = mkdtempSync(join(tmpdir(), "pi-tg-fake bridge-"));
+  const path = join(dir, "tg-mcp");
   writeFileSync(
     path,
     `#!${process.execPath}

@@ -4,7 +4,7 @@ import { access, lstat, mkdir, readFile, rename, stat, writeFile } from "node:fs
 import { homedir } from "node:os";
 import { dirname, isAbsolute, join } from "node:path";
 
-const APP_NAME = "telegram-mcp";
+const APP_NAME = "tg-mcp";
 
 /** The bridge's per-user data directory, resolved exactly as the Go bridge does. */
 export function bridgeDataDir(platform: NodeJS.Platform = process.platform, env: NodeJS.ProcessEnv = process.env, home = homedir()): string {
@@ -27,7 +27,7 @@ export async function loadBridgeToken(dataDir = bridgeDataDir()): Promise<Uint8A
     throw new Error(`${path} is not a private file owned by you`);
   }
   const text = await readFile(path, "utf8");
-  if (!/^[0-9a-f]{64}$/.test(text)) throw new Error(`${path} is not a telegram-mcp API token`);
+  if (!/^[0-9a-f]{64}$/.test(text)) throw new Error(`${path} is not a tg-mcp API token`);
   return Buffer.from(text, "hex");
 }
 
@@ -36,7 +36,7 @@ export type ExtensionConfig = { bridgePath: string };
 export type ConfiguredServer = { source: string; command?: unknown; args?: unknown };
 
 export function configPath(agentDir: string): string {
-  return join(agentDir, "pi-telegram.json");
+  return join(agentDir, "pi-tg.json");
 }
 
 /** Reads this extension's own settings file. It never holds tokens or keys. */
@@ -56,7 +56,7 @@ export async function loadConfig(path: string): Promise<ExtensionConfig | null> 
   } catch {
     // reported below
   }
-  throw new Error(`${path} is not a valid pi-telegram config; run /telegram-setup again`);
+  throw new Error(`${path} is not a valid pi-tg config; run /telegram-setup again`);
 }
 
 export async function saveConfig(path: string, config: ExtensionConfig): Promise<void> {

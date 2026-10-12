@@ -2,7 +2,7 @@ import { createHash, randomBytes } from "node:crypto";
 import { chmod, mkdir, readFile, rename, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
-// Each pi-telegram release pins the SHA-256 of the matching telegram-mcp binaries
+// Each pi-tg release pins the SHA-256 of the matching tg-mcp binaries
 // (bridge-release.json, published to npm). The binary comes from GitHub Releases,
 // so tampering would need both npm and GitHub to be compromised.
 
@@ -33,15 +33,15 @@ export async function installBridge(options: {
 }): Promise<string> {
   const { installDir, release, platform, arch, fetchImpl = fetch } = options;
   const asset = assetFor(release, platform, arch);
-  if (!asset || !release.version) throw new Error(`No telegram-mcp release is available for ${platform}/${arch}`);
+  if (!asset || !release.version) throw new Error(`No tg-mcp release is available for ${platform}/${arch}`);
   const dir = join(installDir, release.version);
-  const target = join(dir, platform === "win32" ? "telegram-mcp.exe" : "telegram-mcp");
+  const target = join(dir, platform === "win32" ? "tg-mcp.exe" : "tg-mcp");
   try {
     if (sha256(await readFile(target)) === asset.sha256) return target;
   } catch {
     // not installed yet
   }
-  const url = `https://github.com/Gybra/telegram-mcp/releases/download/v${release.version}/${asset.file}`;
+  const url = `https://github.com/Gybra/tg-mcp/releases/download/v${release.version}/${asset.file}`;
   const response = await fetchImpl(url, { redirect: "follow", signal: AbortSignal.timeout(5 * 60_000) });
   if (!response.ok || !response.body) throw new Error(`Download failed (HTTP ${response.status})`);
   if (Number(response.headers.get("content-length") ?? 0) > MAX_BINARY_BYTES) throw new Error("Download too large");
@@ -54,7 +54,7 @@ export async function installBridge(options: {
   }
   const data = Buffer.concat(chunks);
   await mkdir(dir, { recursive: true, mode: 0o700 });
-  if (sha256(data) !== asset.sha256) throw new Error("The downloaded telegram-mcp does not match the expected checksum; it was not installed");
+  if (sha256(data) !== asset.sha256) throw new Error("The downloaded tg-mcp does not match the expected checksum; it was not installed");
   const tmp = join(dir, `.download-${randomBytes(6).toString("hex")}`);
   try {
     await writeFile(tmp, data, { mode: 0o700, flag: "wx" });

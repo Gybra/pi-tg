@@ -129,7 +129,7 @@ function answerFor(question: Question, value: string): LoginAnswer {
 }
 
 /**
- * Runs `telegram-mcp login` inside Pi: shows QR codes, or asks for the phone
+ * Runs `tg-mcp login` inside Pi: shows QR codes, or asks for the phone
  * number, the login code and the two-step verification password, and passes the
  * answers only to the bridge. Resolves true once logged in, false when cancelled
  * or outside the TUI.

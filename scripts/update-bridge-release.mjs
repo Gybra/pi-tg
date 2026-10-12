@@ -1,5 +1,5 @@
-// Pins the checksums of a telegram-mcp release in bridge-release.json, before publishing
-// pi-telegram to npm. Usage: node scripts/update-bridge-release.mjs 1.2.3 path/to/SHA256SUMS [output]
+// Pins the checksums of a tg-mcp release in bridge-release.json, before publishing
+// pi-tg to npm. Usage: node scripts/update-bridge-release.mjs 1.2.3 path/to/SHA256SUMS [output]
 import { readFileSync, writeFileSync } from "node:fs";
 
 const [version, sumsPath, output = new URL("../bridge-release.json", import.meta.url)] = process.argv.slice(2);
@@ -9,7 +9,7 @@ if (!/^\d+\.\d+\.\d+$/.test(version ?? "") || !sumsPath) {
 }
 const assets = {};
 for (const line of readFileSync(sumsPath, "utf8").split("\n").filter(Boolean)) {
-  const match = /^([0-9a-f]{64})  (telegram-mcp-(darwin|linux|windows)-(amd64|arm64)(\.exe)?)$/.exec(line);
+  const match = /^([0-9a-f]{64})  (tg-mcp-(darwin|linux|windows)-(amd64|arm64)(\.exe)?)$/.exec(line);
   if (!match) {
     console.error(`Unexpected line in ${sumsPath}: ${line}`);
     process.exit(1);
@@ -17,4 +17,4 @@ for (const line of readFileSync(sumsPath, "utf8").split("\n").filter(Boolean)) {
   assets[`${match[3]}-${match[4]}`] = { file: match[2], sha256: match[1] };
 }
 writeFileSync(output, `${JSON.stringify({ version, assets }, null, 2)}\n`);
-console.log(`Pinned ${Object.keys(assets).length} binaries of telegram-mcp ${version}.`);
+console.log(`Pinned ${Object.keys(assets).length} binaries of tg-mcp ${version}.`);

@@ -1,7 +1,7 @@
 import { execFile, spawn } from "node:child_process";
 import { createInterface } from "node:readline";
 
-// Runs the installed telegram-mcp executable directly, never through a shell.
+// Runs the installed tg-mcp executable directly, never through a shell.
 // Credentials, phone numbers, codes and passwords go to its standard input, never into arguments.
 
 const STATES = ["stopped", "not_logged_in", "connecting", "online", "offline", "action_required"] as const;
@@ -44,14 +44,14 @@ export class BridgeCommandError extends Error {}
 /** The bridge prints errors as "Error: <message>"; keep just the message. */
 function bridgeMessage(stderr: string): string {
   const line = stderr.trim().split("\n").at(-1) ?? "";
-  return line.replace(/^Error:\s*/, "").slice(0, 500) || "telegram-mcp failed";
+  return line.replace(/^Error:\s*/, "").slice(0, 500) || "tg-mcp failed";
 }
 
 export function runBridgeCommand(bridgePath: string, args: string[], options: { input?: string; timeoutMs?: number } = {}): Promise<string> {
   return new Promise((resolve, reject) => {
     const child = execFile(bridgePath, args, { timeout: options.timeoutMs ?? 30_000, maxBuffer: 1024 * 1024, windowsHide: true }, (error, stdout, stderr) => {
       if (!error) return resolve(stdout);
-      if (error.killed || error.signal) return reject(new BridgeCommandError(`telegram-mcp ${args[0]} did not respond`));
+      if (error.killed || error.signal) return reject(new BridgeCommandError(`tg-mcp ${args[0]} did not respond`));
       reject(new BridgeCommandError(bridgeMessage(stderr)));
     });
     child.stdin?.end(options.input ?? "");
@@ -63,7 +63,7 @@ function parseStatus(text: string): BridgeStatus {
   try {
     s = JSON.parse(text) as Record<string, unknown>;
   } catch {
-    throw new BridgeCommandError("telegram-mcp returned an unreadable status");
+    throw new BridgeCommandError("tg-mcp returned an unreadable status");
   }
   const valid =
     typeof s === "object" && s !== null &&
@@ -72,7 +72,7 @@ function parseStatus(text: string): BridgeStatus {
     typeof s.approver_id === "string" && /^([0-9a-f]{64})?$/.test(s.approver_id) &&
     Number.isInteger(s.api_port) && (s.api_port as number) >= 1024 && (s.api_port as number) <= 65535 &&
     typeof s.data_dir === "string" && typeof s.log_file === "string";
-  if (!valid) throw new BridgeCommandError("telegram-mcp returned an unexpected status");
+  if (!valid) throw new BridgeCommandError("tg-mcp returned an unexpected status");
   return s as BridgeStatus;
 }
 
@@ -89,7 +89,7 @@ export async function pairPi(bridgePath: string, publicKeyB64: string): Promise<
   } catch {
     // reported below
   }
-  throw new BridgeCommandError("telegram-mcp did not confirm the pairing");
+  throw new BridgeCommandError("tg-mcp did not confirm the pairing");
 }
 
 /** Stores the user's Telegram API credentials in the bridge's private config. */
@@ -128,7 +128,7 @@ function parseLoginEvent(line: string): LoginEvent | undefined {
   return undefined;
 }
 
-/** Runs `telegram-mcp login --json`, passing each valid event to onEvent. */
+/** Runs `tg-mcp login --json`, passing each valid event to onEvent. */
 export function startLogin(bridgePath: string, method: "qr" | "phone", onEvent: (event: LoginEvent) => void): LoginProcess {
   const child = spawn(bridgePath, ["login", "--json", "--method", method], { stdio: ["pipe", "pipe", "pipe"], windowsHide: true });
   let stderr = "";

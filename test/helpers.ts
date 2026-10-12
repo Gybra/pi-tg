@@ -34,7 +34,7 @@ const sha256 = (data: Uint8Array) => createHash("sha256").update(data).digest();
 export function wireFor(payload: Uint8Array | object, publicKeyB64: string, overrides: Record<string, unknown> = {}) {
   const bytes = payload instanceof Uint8Array ? payload : Buffer.from(JSON.stringify(payload));
   const publicKey = Buffer.from(publicKeyB64, "base64");
-  const challenge = Buffer.concat([Buffer.from("telegram-mcp/approval/v1\0"), Buffer.alloc(32, 7), sha256(bytes), sha256(publicKey)]);
+  const challenge = Buffer.concat([Buffer.from("tg-mcp/approval/v1\0"), Buffer.alloc(32, 7), sha256(bytes), sha256(publicKey)]);
   const parsed = payload instanceof Uint8Array ? {} : (payload as { draft_id?: string; expires_at?: number });
   return {
     draft_id: parsed.draft_id ?? "0".repeat(32),

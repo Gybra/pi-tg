@@ -1,4 +1,4 @@
-# pi-telegram
+# pi-tg
 
 Read and search your Telegram chats from [Pi](https://pi.dev), and send messages only after you approve each one inside Pi's terminal.
 
@@ -14,11 +14,11 @@ It uses your own Telegram account, like Telegram Desktop does: no bot, nothing a
 | Linux | Developed for it, not tested yet. |
 | Windows | **Experimental.** Developed for it, not tested yet. |
 
-It needs the [telegram-mcp](https://github.com/Gybra/telegram-mcp) bridge, which `/telegram-setup` can download for you.
+It needs the [tg-mcp](https://github.com/Gybra/tg-mcp) bridge, which `/telegram-setup` can download for you.
 
 ## How it works
 
-- The **telegram-mcp bridge** (a separate Go program) logs in to your Telegram account and serves the Telegram tools to Pi over MCP. It refuses to send anything without a signed approval for that exact message.
+- The **tg-mcp bridge** (a separate Go program) logs in to your Telegram account and serves the Telegram tools to Pi over MCP. It refuses to send anything without a signed approval for that exact message.
 - **This extension** walks you through the setup and shows you each outgoing message in full before it is sent. Choosing *Approve and send* signs that one message with a key that exists only in this Pi process.
 
 Reading and searching need no approval. Every text, file or voice message does, one at a time:
@@ -37,24 +37,24 @@ Everything happens inside Pi; no second terminal is needed. Plan about five minu
 1. **Install the extension:**
 
    ```sh
-   pi install npm:pi-telegram   # once published
+   pi install npm:@gybra/pi-tg   # once published
    ```
 
 2. **In Pi, run `/telegram-setup`.** It asks one thing at a time and skips what is already done.
 
-3. **The bridge.** Choose *Download and install telegram-mcp*: Pi downloads it and checks it against the checksum pinned in this package. If you built it yourself, run `/telegram-setup /path/to/telegram-mcp` instead.
+3. **The bridge.** Choose *Download and install tg-mcp*: Pi downloads it and checks it against the checksum pinned in this package. If you built it yourself, run `/telegram-setup /path/to/tg-mcp` instead.
 
 4. **Your API credentials.** Telegram requires every program that logs in to an account to have its own credentials. Pi explains how to create yours:
    - open [my.telegram.org](https://my.telegram.org) in a browser and enter your phone number with the country code; the login code arrives in your Telegram app, not by SMS;
    - click **API development tools**;
-   - fill in App title `telegram-mcp`, Short name `telegrammcp`, Platform `Desktop`, and click **Create application**;
+   - fill in App title `tg-mcp`, Short name `tgmcp`, Platform `Desktop`, and click **Create application**;
    - paste **App api_id** (a number) and **App api_hash** (32 letters and digits) into Pi when it asks. If something does not look right, Pi says so and asks again.
 
 5. **Log in.** Pi asks how:
    - **QR code (recommended):** on your phone, open Telegram › Settings › Devices › Link Desktop Device and scan the code shown in Pi;
    - **Phone number:** type your number, then the code Telegram sends you. It usually arrives in your Telegram app on another device, not by SMS.
 
-   If your account has two-step verification, Pi asks for its password; it is not shown while you type and is passed only to the bridge. The new session appears in your Telegram apps under Settings › Devices as `telegram-mcp`.
+   If your account has two-step verification, Pi asks for its password; it is not shown while you type and is passed only to the bridge. The new session appears in your Telegram apps under Settings › Devices as `tg-mcp`.
 
 6. **Background.** Choose whether the bridge starts automatically when you log in to your computer, runs until you log out, or does not start yet. Nothing runs in the background without your choice.
 
@@ -71,7 +71,7 @@ Your `settings.json` and `mcp.json` are not changed. If `mcp.json` already defin
 
 The approval key exists only in the running Pi process and is never written to disk. When Pi quits or reloads, the bridge stops trusting it, and the next session asks again.
 
-To send a file, ask Pi to copy it into the bridge's `outbox` folder and send it; every file is reviewed before it is sent. Received files that Pi downloads, such as voice messages, are saved in the bridge's `downloads` folder, where Pi can open them for you. Both folders are in the bridge's data directory, shown by `/telegram-status` or `telegram-mcp status`.
+To send a file, ask Pi to copy it into the bridge's `outbox` folder and send it; every file is reviewed before it is sent. Received files that Pi downloads, such as voice messages, are saved in the bridge's `downloads` folder, where Pi can open them for you. Both folders are in the bridge's data directory, shown by `/telegram-status` or `tg-mcp status`.
 
 ## Security notes
 

@@ -6,7 +6,7 @@ export const CREDENTIALS_GUIDE = `Telegram asks every program that logs in to an
 
 1. Open https://my.telegram.org in your browser and enter your phone number with the country code. The login code arrives in your Telegram app, not by SMS.
 2. Click "API development tools".
-3. Fill in the form: App title "telegram-mcp", Short name "telegrammcp", Platform "Desktop". You can leave URL and Description empty. Click "Create application".
+3. Fill in the form: App title "tg-mcp", Short name "tgmcp", Platform "Desktop". You can leave URL and Description empty. Click "Create application".
 4. The page now shows "App api_id" (a number) and "App api_hash" (32 letters and digits). Keep that page open: Pi asks for both next.
 
 Keep them private: Pi stores them in a private file on this computer and never shows them to the AI.

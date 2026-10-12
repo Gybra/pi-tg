@@ -16,7 +16,7 @@ body:
     id: versions
     attributes:
       label: Versions
-      description: Pi (`pi --version`), pi-telegram, and `telegram-mcp version`
+      description: Pi (`pi --version`), pi-tg, and `tg-mcp version`
     validations:
       required: true
   - type: textarea
@@ -35,5 +35,5 @@ body:
     id: logs
     attributes:
       label: Relevant output
-      description: From Pi and `telegram-mcp logs`. Remove anything personal.
+      description: From Pi and `tg-mcp logs`. Remove anything personal.
       render: text

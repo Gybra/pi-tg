@@ -60,7 +60,7 @@ export function setup(pi: ExtensionAPI, deps: Deps): void {
   let client: BridgeClient | undefined;
   let controller: ApprovalController | undefined;
   let registeredBridge: string | undefined;
-  const installDir = join(deps.agentDir, "pi-telegram-bridge");
+  const installDir = join(deps.agentDir, "pi-tg-bridge");
   const guardPaths = { dataDir: deps.dataDir(), installDir, configFile: configPath(deps.agentDir) };
 
   const bridgePath = async () => (await loadConfig(configPath(deps.agentDir)).catch(() => null))?.bridgePath;
@@ -159,18 +159,18 @@ export function setup(pi: ExtensionAPI, deps: Deps): void {
     const configured = await bridgePath();
     if (configured && !(await checkBridgeExecutable(configured))) return configured;
     const asset = assetFor(deps.release, deps.platform, deps.arch);
-    const download = `Download and install telegram-mcp v${deps.release.version} (checksum verified)`;
-    const existing = "Use an existing telegram-mcp executable";
+    const download = `Download and install tg-mcp v${deps.release.version} (checksum verified)`;
+    const existing = "Use an existing tg-mcp executable";
     const choice = await ctx.ui.select(
-      "Pi talks to Telegram through a small helper program, the telegram-mcp bridge. Which one should it use?",
+      "Pi talks to Telegram through a small helper program, the tg-mcp bridge. Which one should it use?",
       asset ? [download, existing] : [existing],
     );
     if (choice === download) {
-      ctx.ui.notify(`Downloading telegram-mcp v${deps.release.version}…`, "info");
+      ctx.ui.notify(`Downloading tg-mcp v${deps.release.version}…`, "info");
       return installBridge({ installDir, release: deps.release, platform: deps.platform, arch: deps.arch, fetchImpl: deps.fetchImpl });
     }
     if (choice !== existing) return undefined;
-    const path = (await ctx.ui.input("Absolute path to the telegram-mcp executable", "/usr/local/bin/telegram-mcp"))?.trim();
+    const path = (await ctx.ui.input("Absolute path to the tg-mcp executable", "/usr/local/bin/tg-mcp"))?.trim();
     if (!path) return undefined;
     const problem = await checkBridgeExecutable(path);
     if (problem) return void ctx.ui.notify(`Not a usable bridge: ${problem}.`, "error");
@@ -181,7 +181,7 @@ export function setup(pi: ExtensionAPI, deps: Deps): void {
   async function logIn(ctx: ExtensionContext, path: string, status: BridgeStatus): Promise<boolean> {
     const ok = await ctx.ui.confirm(
       "Log this computer in to your Telegram account?",
-      "It will appear in your Telegram apps under Settings › Devices as telegram-mcp, and you can end it there at any time. Nobody is added to your chats and nothing is sent without your approval.",
+      "It will appear in your Telegram apps under Settings › Devices as tg-mcp, and you can end it there at any time. Nobody is added to your chats and nothing is sent without your approval.",
     );
     if (!ok) {
       ctx.ui.notify("Not logged in yet. Run /telegram-setup again when you are ready.", "info");
@@ -282,7 +282,7 @@ export function setup(pi: ExtensionAPI, deps: Deps): void {
       if (!go) return;
       const logout = await ctx.ui.confirm(
         "Also log this computer out of Telegram?",
-        "This ends the telegram-mcp session on Telegram's side. If you skip it, the session stays listed in your Telegram apps under Settings › Devices, where you can end it later.",
+        "This ends the tg-mcp session on Telegram's side. If you skip it, the session stays listed in your Telegram apps under Settings › Devices, where you can end it later.",
       );
       let purge = await ctx.ui.confirm(
         "Also delete all Telegram data on this computer?",

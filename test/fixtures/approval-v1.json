@@ -1,5 +1,5 @@
 {
-  "description": "telegram-mcp approval v1 vector. RFC 8032 test-1 key; fictional account and recipient. Never a live key.",
+  "description": "tg-mcp approval v1 vector. RFC 8032 test-1 key; fictional account and recipient. Never a live key.",
   "now": 1800000000,
   "public_key_b64": "11qYAYKxCrfVS/7TyWQHOg7hcvPapiMlrwIaaPcHURo=",
   "approver_id": "21fe31dfa154a261626bf854046fd2271b7bed4b6abe45aa58877ef47f9721b9",
@@ -12,7 +12,7 @@
   "media_b64": "Zml4dHVyZSBhdHRhY2htZW50Cg==",
   "draft_id": "000102030405060708090a0b0c0d0e0f",
   "payload_b64": "eyJ2ZXJzaW9uIjoxLCJkcmFmdF9pZCI6IjAwMDEwMjAzMDQwNTA2MDcwODA5MGEwYjBjMGQwZTBmIiwiYWNjb3VudF9pZCI6IjEwMDAwMDEiLCJwZWVyX2lkIjoidXNlcjoxMDAwMDAyIiwicGVlcl9raW5kIjoidXNlciIsInBlZXJfbmFtZSI6IkRhdmlkZSBcdTAwM2NUZXN0XHUwMDNlIFx1MDAyNiBDbyDigJQg4pyTIiwicGVlcl91c2VybmFtZSI6InRlc3Rjb250YWN0IiwibWVzc2FnZSI6IiIsImtpbmQiOiJmaWxlIiwiYXR0YWNobWVudCI6eyJpZCI6InJlcG9ydC5wZGYiLCJuYW1lIjoicmVwb3J0LnBkZiIsIm1pbWUiOiJhcHBsaWNhdGlvbi9wZGYiLCJzaXplIjoxOSwic2hhMjU2IjoiZmE3YjU3ZGRlZWEwOWUzNDcyMDljY2E0YzUxZWJiNzdiOWVjYTk3MTE3ZTFkNGZlYTMxMjY4MDJkZWU3Y2MzMCJ9LCJleHBpcmVzX2F0IjoxODAwMDAwMTIwfQ==",
-  "challenge_b64": "dGVsZWdyYW0tbWNwL2FwcHJvdmFsL3YxABAREhMUFRYXGBkaGxwdHh8gISIjJCUmJygpKissLS4voIn9To1xMtvc7/PaRrNkrHWjRgLnAter95hm8fP231wh/jHfoVSiYWJr+FQEb9InG3vtS2q+RapYh370f5chuQ==",
+  "challenge_b64": "dGctbWNwL2FwcHJvdmFsL3YxABAREhMUFRYXGBkaGxwdHh8gISIjJCUmJygpKissLS4voIn9To1xMtvc7/PaRrNkrHWjRgLnAter95hm8fP231wh/jHfoVSiYWJr+FQEb9InG3vtS2q+RapYh370f5chuQ==",
   "expires_at": 1800000120,
-  "signature_b64": "zNaXJ1/QwziKDW9Y3cE7t/bsBzpKotoxLXzXaDOtxd7GAudC+JtCSNvbO15j4yqBxjQF4dh8b+SFb109JKeQAg=="
+  "signature_b64": "+2lvE7bX0MCs6kofFP+rCZGLwVF3a81CHd5e/Ryow9y5Rwj3LzAHvKi0XWpFkpXvIudVdql3H/bgheipmsyIDg=="
 }
