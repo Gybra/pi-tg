@@ -3,10 +3,12 @@ import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { basename, join } from "node:path";
 import type { ExtensionContext, Theme } from "@earendil-works/pi-coding-agent";
-import { Key, matchesKey, truncateToWidth, wrapTextWithAnsi, type Component } from "@earendil-works/pi-tui";
+import { Key, matchesKey, truncateToWidth, wrapTextWithAnsi, type Component, type TuiMouseEvent, type TuiMouseEventResult } from "@earendil-works/pi-tui";
 import type { AttachmentView, PeerKind, ReviewedDraft } from "./protocol.ts";
 
 const INLINE_TEXT_LIMIT = 64 * 1024;
+// An overlay gets the whole terminal height: in Pi's editor dock the bottom rows would be clipped and PgUp/PgDn taken.
+const REVIEW_OVERLAY = { overlay: true, overlayOptions: { width: "100%", maxHeight: "100%", anchor: "bottom-left" } } as const;
 const KIND_LABEL = { text: "message", file: "file", voice: "voice message" } as const;
 const AUDIENCE: Record<PeerKind, string> = {
   saved_messages: "your Saved Messages, only you see it",
@@ -127,6 +129,12 @@ export class DraftReview implements Component {
     this.options.requestRender();
   }
 
+  handleMouse(event: TuiMouseEvent): TuiMouseEventResult | undefined {
+    if (event.type !== "wheel" || !event.wheelDelta) return undefined;
+    this.offset += event.wheelDelta; // clamped on render
+    return { handled: true };
+  }
+
   invalidate(): void {}
 
   dispose(): void {
@@ -197,7 +205,7 @@ export async function reviewDraft(ctx: ExtensionContext, draft: ReviewedDraft, s
         requestRender: () => tui.requestRender(),
         dispose: () => signal.removeEventListener("abort", onAbort),
       });
-    });
+    }, REVIEW_OVERLAY);
   } finally {
     await prepared?.cleanup();
   }
