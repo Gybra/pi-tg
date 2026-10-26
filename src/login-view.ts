@@ -1,6 +1,6 @@
 import type { ExtensionContext, Theme } from "@earendil-works/pi-coding-agent";
 import { truncateToWidth, wrapTextWithAnsi, type Component } from "@earendil-works/pi-tui";
-import type { LoginAnswer, LoginEvent, LoginProcess } from "./bridge-cli.ts";
+import type { LoginAnswer, LoginEvent, LoginProcess } from "./types/bridge.ts";
 
 type Question = "phone" | "code" | "password";
 

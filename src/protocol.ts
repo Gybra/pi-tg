@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import type { ApprovalPayload, AttachmentView, PeerKind, ReviewedDraft, SendKind, SessionSigner } from "./types/approval.ts";
 
 // Wire format of the bridge's approval protocol v1 (tg-mcp docs/approval-protocol-v1.md).
 // Drafts are parsed from the exact bytes the bridge will send, never rebuilt locally.
@@ -7,7 +8,7 @@ const MAX_MESSAGE_CHARS = 4096; // Telegram's limit, in Unicode code points
 const MAX_MEDIA_BYTES = 50 * 1024 * 1024;
 const MAX_PAYLOAD_BYTES = 256 * 1024; // message plus worst-case JSON escaping
 const MAX_NAME_CHARS = 1024;
-const KINDS = ["text", "file", "voice"] as const;
+export const KINDS = ["text", "file", "voice"] as const;
 // The bridge refuses to send into forum groups, so a draft never names one.
 export const PEER_KINDS = ["saved_messages", "user", "bot", "group", "supergroup", "channel"] as const;
 const HEX32 = /^[0-9a-f]{32}$/;
@@ -15,40 +16,6 @@ const HEX64 = /^[0-9a-f]{64}$/;
 const PEER_ID = /^(user|chat|channel):[1-9][0-9]{0,18}$/;
 const ACCOUNT_ID = /^[1-9][0-9]{0,18}$/;
 const USERNAME = /^[A-Za-z0-9_]{0,32}$/;
-
-export type SendKind = (typeof KINDS)[number];
-export type PeerKind = (typeof PEER_KINDS)[number];
-
-export type SendInput = { kind: SendKind; recipient: string; message: string; media_id: string };
-
-export type AttachmentView = { id: string; name: string; mime: string; size: number; sha256: string };
-
-export type ApprovalPayload = {
-  version: 1;
-  draft_id: string;
-  account_id: string;
-  peer_id: string;
-  peer_kind: PeerKind;
-  peer_name: string;
-  peer_username: string;
-  message: string;
-  kind: SendKind;
-  attachment: AttachmentView | null;
-  expires_at: number;
-};
-
-export type DraftView = { draft_id: string; payload_b64: string; challenge_b64: string; approver_id: string; expires_at: number };
-
-export type ApprovalProof = { draft_id: string; signature_b64: string };
-
-export type SessionSigner = {
-  readonly publicKeyB64: string;
-  readonly approverID: string;
-  sign(challenge: Uint8Array): string;
-  dispose(): void;
-};
-
-export type ReviewedDraft = { wire: DraftView; payload: ApprovalPayload; payloadBytes: Uint8Array; challengeBytes: Uint8Array };
 
 /** Validates a bridge draft for this session's signer. Throws on anything unexpected. */
 export function decodeDraft(wire: unknown, signer: SessionSigner, nowSeconds: number): ReviewedDraft {

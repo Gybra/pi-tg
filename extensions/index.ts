@@ -2,27 +2,18 @@ import { readFileSync } from "node:fs";
 import { rm } from "node:fs/promises";
 import { join, sep } from "node:path";
 import { getAgentDir, type ExtensionAPI, type ExtensionContext, type ToolCallEventResult } from "@earendil-works/pi-coding-agent";
-import { createApprovalController, createSessionSigner, destroySessionSigner, isOutgoingTelegramCall, type ApprovalController } from "../src/approval.ts";
-import { bridgeStatus, pairPi, runBridgeCommand, setApp, startLogin, type BridgeStatus } from "../src/bridge-cli.ts";
-import { createBridgeClient, type BridgeClient } from "../src/bridge-client.ts";
+import { createApprovalController, createSessionSigner, destroySessionSigner, isOutgoingTelegramCall } from "../src/approval.ts";
+import { bridgeStatus, pairPi, runBridgeCommand, setApp, startLogin } from "../src/bridge-cli.ts";
+import { createBridgeClient } from "../src/bridge-client.ts";
 import { bridgeDataDir, checkBridgeExecutable, configPath, findConfiguredServer, isSameBridge, loadBridgeToken, loadConfig, saveConfig } from "../src/config.ts";
 import { protectedToolCall } from "../src/guard.ts";
-import { assetFor, installBridge, type BridgeRelease } from "../src/install.ts";
+import { assetFor, installBridge } from "../src/install.ts";
 import { runLoginScreen } from "../src/login-view.ts";
-import type { SessionSigner } from "../src/protocol.ts";
 import { reviewDraft } from "../src/review.ts";
+import type { ApprovalController, SessionSigner } from "../src/types/approval.ts";
+import type { BridgeClient, BridgeRelease, BridgeStatus } from "../src/types/bridge.ts";
+import type { Deps } from "../src/types/extension.ts";
 import { askCredentials } from "../src/wizard.ts";
-
-export type Deps = {
-  agentDir: string;
-  dataDir(): string;
-  release: BridgeRelease;
-  platform: NodeJS.Platform;
-  arch: string;
-  fetchImpl?: typeof fetch;
-  createSigner(): SessionSigner;
-  connect(bridgePath: string): BridgeClient | Promise<BridgeClient>;
-};
 
 const defaultDeps = (): Deps => ({
   agentDir: getAgentDir(),

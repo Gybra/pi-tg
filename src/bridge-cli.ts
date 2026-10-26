@@ -1,43 +1,14 @@
 import { execFile, spawn } from "node:child_process";
 import { createInterface } from "node:readline";
+import type { BridgeStatus, LoginEvent, LoginProcess } from "./types/bridge.ts";
 
 // Runs the installed tg-mcp executable directly, never through a shell.
 // Credentials, phone numbers, codes and passwords go to its standard input, never into arguments.
 
-const STATES = ["stopped", "not_logged_in", "connecting", "online", "offline", "action_required"] as const;
-const CODE_TYPES = ["app", "sms", "call", "email", "other"] as const;
+export const STATES = ["stopped", "not_logged_in", "connecting", "online", "offline", "action_required"] as const;
+export const CODE_TYPES = ["app", "sms", "call", "email", "other"] as const;
 // Text the bridge shows the user: no control or format characters that could rewrite the screen.
 const PLAIN = /^[^\p{Cc}\p{Cf}]*$/u;
-
-export type BridgeStatus = {
-  version: string;
-  running: boolean;
-  state: (typeof STATES)[number];
-  connected: boolean;
-  configured: boolean;
-  logged_in: boolean;
-  approver_id: string;
-  autostart: boolean;
-  api_port: number;
-  data_dir: string;
-  log_file: string;
-};
-
-export type LoginEvent =
-  | { event: "qr"; modules: string[]; expires_in: number }
-  | { event: "need_phone" | "need_code" }
-  | { event: "code_sent"; code_type: (typeof CODE_TYPES)[number]; code_length: number }
-  | { event: "need_password"; hint: string; message: string }
-  | { event: "notice" | "logged_in"; message: string };
-
-export type LoginAnswer = { phone: string } | { code: string } | { password: string } | { cancel: true };
-
-export type LoginProcess = {
-  /** Answers need_phone, need_code or need_password. */
-  answer(answer: LoginAnswer): void;
-  cancel(): void;
-  done: Promise<{ ok: true } | { ok: false; error: string }>;
-};
 
 export class BridgeCommandError extends Error {}
 

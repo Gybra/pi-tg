@@ -1,5 +1,5 @@
 import { Agent, request } from "node:http";
-import type { SendInput } from "./protocol.ts";
+import type { BridgeClient, RuntimeStatus } from "./types/bridge.ts";
 
 // The bridge listens on 127.0.0.1 at its configured port and rejects any other Host header.
 export const DEFAULT_API_PORT = 8081;
@@ -7,24 +7,9 @@ const JSON_LIMIT = 4 * 1024 * 1024;
 const PREVIEW_LIMIT = 16 * 1024 * 1024;
 const TIMEOUT_MS = 180_000;
 const DRAFT_ID = /^[0-9a-f]{32}$/;
-const STATES = ["not_logged_in", "connecting", "online", "offline", "action_required", "stopped"] as const;
+export const STATES = ["not_logged_in", "connecting", "online", "offline", "action_required", "stopped"] as const;
 // Guidance written by the bridge for the user or model; anything else is dropped.
 const DETAIL = /^[^\p{Cc}\p{Cf}]{1,500}$/u;
-
-export type RuntimeStatus = {
-  state: (typeof STATES)[number];
-  connected: boolean;
-  approver_id: string;
-};
-
-export type BridgeClient = {
-  status(signal?: AbortSignal): Promise<RuntimeStatus>;
-  /** Returns the bridge's draft as received; callers validate it with decodeDraft. */
-  prepare(input: SendInput, signal: AbortSignal): Promise<unknown>;
-  cancel(draftID: string, signal?: AbortSignal): Promise<void>;
-  revoke(signal?: AbortSignal): Promise<void>;
-  preview(draftID: string, signal: AbortSignal): Promise<Uint8Array>;
-};
 
 /**
  * A failed bridge call. `code` is the bridge's fixed error code, or a local one such as "unreachable";
