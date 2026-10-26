@@ -1,5 +1,5 @@
-import type { BridgeClient, BridgeRelease } from "./bridge.ts";
 import type { SessionSigner } from "./approval.ts";
+import type { BridgeClient, BridgeRelease } from "./bridge.ts";
 
 export type Deps = {
   agentDir: string;
