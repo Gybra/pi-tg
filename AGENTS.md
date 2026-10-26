@@ -34,6 +34,12 @@ You MUST use clear names, straightforward control flow, and familiar patterns. D
 
 Make the intent easy to understand for someone reviewing or maintaining the code. Remove duplication and unnecessary structure, but keep boundaries that make the code clearer.
 
+## Keep Exported Types in a Types Module
+
+You MUST declare every exported `type` and `interface` in the package's types module (`src/types.ts`), never in a file that also exports functions, classes, or values. Import them with `import type`.
+
+A type used by only one file stays in that file, unexported.
+
 ## pi-tg constraints
 
 Pi package that guides the setup of the tg-mcp bridge and reviews and approves outgoing Telegram operations inside Pi's terminal UI. Telegram connectivity, MCP tools and final enforcement live in the separate `tg-mcp` Go repository; this package never sends messages itself.
