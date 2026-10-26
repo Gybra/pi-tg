@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { visibleWidth } from "@earendil-works/pi-tui";
-import type { LoginAnswer, LoginEvent, LoginProcess } from "../src/bridge-cli.ts";
+import type { LoginAnswer, LoginEvent, LoginProcess } from "../src/types.ts";
 import { renderQRLines, runLoginScreen } from "../src/login-view.ts";
 
 const KEYS = { enter: "\r", escape: "\x1b", backspace: "\x7f" };

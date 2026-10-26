@@ -31,9 +31,9 @@ export async function loadBridgeToken(dataDir = bridgeDataDir()): Promise<Uint8A
   return Buffer.from(text, "hex");
 }
 
-export type ExtensionConfig = { bridgePath: string };
+type ExtensionConfig = { bridgePath: string };
 
-export type ConfiguredServer = { source: string; command?: unknown; args?: unknown };
+type ConfiguredServer = { source: string; command?: unknown; args?: unknown };
 
 export function configPath(agentDir: string): string {
   return join(agentDir, "pi-tg.json");
