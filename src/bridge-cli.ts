@@ -1,6 +1,6 @@
 import { execFile, spawn } from "node:child_process";
 import { createInterface } from "node:readline";
-import type { BridgeStatus, LoginEvent, LoginProcess } from "./types.ts";
+import type { BridgeStatus, LoginEvent, LoginProcess } from "./types/bridge.ts";
 
 // Runs the installed tg-mcp executable directly, never through a shell.
 // Credentials, phone numbers, codes and passwords go to its standard input, never into arguments.

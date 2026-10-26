@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 import { assetFor, installBridge } from "../src/install.ts";
-import type { BridgeRelease } from "../src/types.ts";
+import type { BridgeRelease } from "../src/types/bridge.ts";
 
 const binary = Buffer.from("#!/bin/sh\necho tg-mcp\n");
 const sha256 = createHash("sha256").update(binary).digest("hex");

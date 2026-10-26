@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import type { ApprovalPayload, AttachmentView, PeerKind, ReviewedDraft, SendKind, SessionSigner } from "./types.ts";
+import type { ApprovalPayload, AttachmentView, PeerKind, ReviewedDraft, SendKind, SessionSigner } from "./types/approval.ts";
 
 // Wire format of the bridge's approval protocol v1 (tg-mcp docs/approval-protocol-v1.md).
 // Drafts are parsed from the exact bytes the bridge will send, never rebuilt locally.

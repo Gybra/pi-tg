@@ -1,5 +1,5 @@
 import { Agent, request } from "node:http";
-import type { BridgeClient, RuntimeStatus } from "./types.ts";
+import type { BridgeClient, RuntimeStatus } from "./types/bridge.ts";
 
 // The bridge listens on 127.0.0.1 at its configured port and rejects any other Host header.
 export const DEFAULT_API_PORT = 8081;

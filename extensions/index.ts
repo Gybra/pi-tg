@@ -10,7 +10,9 @@ import { protectedToolCall } from "../src/guard.ts";
 import { assetFor, installBridge } from "../src/install.ts";
 import { runLoginScreen } from "../src/login-view.ts";
 import { reviewDraft } from "../src/review.ts";
-import type { ApprovalController, BridgeClient, BridgeRelease, BridgeStatus, Deps, SessionSigner } from "../src/types.ts";
+import type { ApprovalController, SessionSigner } from "../src/types/approval.ts";
+import type { BridgeClient, BridgeRelease, BridgeStatus } from "../src/types/bridge.ts";
+import type { Deps } from "../src/types/extension.ts";
 import { askCredentials } from "../src/wizard.ts";
 
 const defaultDeps = (): Deps => ({
