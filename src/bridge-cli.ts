@@ -54,6 +54,8 @@ export function runBridgeCommand(bridgePath: string, args: string[], options: { 
       if (error.killed || error.signal) return reject(new BridgeCommandError(`tg-mcp ${args[0]} did not respond`));
       reject(new BridgeCommandError(bridgeMessage(stderr)));
     });
+    // The bridge may exit before reading its input; its exit status reports the failure.
+    child.stdin?.on("error", () => {});
     child.stdin?.end(options.input ?? "");
   });
 }
